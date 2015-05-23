@@ -1,0 +1,58 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_model"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@string/hello_world"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/btn_insert_model_callback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="insert model and callback"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/btn_update_model_callback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="update model and callback"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/btn_replace_model_callback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="replace model and callback"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/btn_delete_model_callback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="delete model and callback"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/need_select_model"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="@string/hello_world"
+            android:textSize="17sp" />
+        />
+    </LinearLayout>
+
+</ScrollView>
