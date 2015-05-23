@@ -17,7 +17,7 @@ import mrfu.db.BaseModel;
 import mrfu.db.DBOperateAsyncListener;
 import mrfu.db.DBOperateDeleteListener;
 import mrfu.db.DatabaseManager;
-import mrfu.db.DatabaseOptionType; 
+import mrfu.db.DatabaseOptionType;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
