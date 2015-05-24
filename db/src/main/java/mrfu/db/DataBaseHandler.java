@@ -56,11 +56,10 @@ public class DataBaseHandler extends Handler {
 			return;
 		}
 		@SuppressWarnings("unchecked")
-		DBMsgObject<T> msgObj = (DBMsgObject<T>)msg.obj;
-		String tableName = DatabaseTools.getTableName(msgObj.claz);
+		DBMsgObject<T> msgObj = (DBMsgObject<T>)msg.obj;//获取到消息对象
+		String tableName = DatabaseTools.getTableName(msgObj.claz);//拿到对应表名
 		if(!TextUtils.isEmpty(tableName) && msgObj.contentConditionList != null && msgObj.contentConditionList.size() > 0){
-			SQLiteDatabase database = appAppDatabase
-					.getWritableDatabase();
+			SQLiteDatabase database = appAppDatabase.getWritableDatabase();
 			if (database != null) {
 				List<T> successModels = new ArrayList<T>();
 				List<T> failModels = new ArrayList<T>();
@@ -68,10 +67,10 @@ public class DataBaseHandler extends Handler {
 				try{
 					for(ContentCondition<T> condition : msgObj.contentConditionList){
 						if (condition != null && condition.contentValues != null) {
-							long id = database.insert(tableName, null, condition.contentValues);
-							if(id != -1){
+							long id = database.insert(tableName, null, condition.contentValues);//进行插入操作
+							if(id != -1){//插入成功，将对应的model 值放入到 successModels 中
 								successModels.add(condition.model);
-							}else{
+							}else{//失败，放入到failModels
 								failModels.add(condition.model);
 							}
 						}
@@ -162,10 +161,9 @@ public class DataBaseHandler extends Handler {
 		final DBMsgObject<T> msgObj = (DBMsgObject<T>)msg.obj;
 		String tableName = DatabaseTools.getTableName(msgObj.claz);
 		if(!TextUtils.isEmpty(tableName) && msgObj.contentConditionList != null && msgObj.contentConditionList.size() > 0){
-			SQLiteDatabase database = appAppDatabase
-					.getWritableDatabase();
+			SQLiteDatabase database = appAppDatabase.getWritableDatabase();
 			if (database != null) {
-				int rows = 0;
+				int rows = 0;//删除的行数，用于回调到主线程的时候使用
 				database.beginTransaction();
 				try{
 					for(ContentCondition<T> condition : msgObj.contentConditionList){
@@ -195,10 +193,8 @@ public class DataBaseHandler extends Handler {
 	private <T extends BaseModel> void postToMainLoop(final DBOperateAsyncListener listener,final DatabaseOptionType type,final Class<T> claz,final List<T> successModels,final List<T> failModels){
 		if(listener != null){
 			uiHandler.post(new Runnable() {
-				
 				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					try{
 					listener.onPostExecute(type,claz,successModels,failModels);
 					}catch(Throwable t){

@@ -37,7 +37,7 @@ public class DatabaseManager {
 	}
 	/**
 	 * 初始化数据化
-	 * 
+	 *
 	 * @param context
 	 * @param dbName
 	 * @param version
@@ -71,13 +71,13 @@ public class DatabaseManager {
 			appAppDatabase = null;
 		}
 	}
-	
+
 	public synchronized <T extends BaseModel> List<T> select(Class<T> claz){
 		return select(claz, null, null, null, null, null, null, null);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param claz
 	 * @param columns  要查询的列所有名称集
 	 * @param selection  WHERE之后的条件语句，可以使用占位符
@@ -135,33 +135,31 @@ public class DatabaseManager {
 		return null;
 	}
 
-	public <T extends BaseModel> void insert(Class<T> claz, T t,
-			DBOperateAsyncListener listener) {
+	public <T extends BaseModel> void insert(Class<T> claz, T t, DBOperateAsyncListener listener) {
 		if (claz != null && t != null) {
-			DBMsgObject<T> msgObj = new DBMsgObject<T>();
+			DBMsgObject<T> msgObj = new DBMsgObject<T>();//创建DBMsgObject 对象，作为Message 的 obj
 			msgObj.claz = claz;
 			ContentValues contentValues = null;
 			try {
-				contentValues = t.getContentValues();
+				contentValues = t.getContentValues();//拿到 BaseModel 的 ContentValues
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			if (contentValues != null) {
+				//ContentCondition 主要为插入数据库的条件，值
 				List<DBMsgObject.ContentCondition<T>> contentConditionList = new ArrayList<DBMsgObject.ContentCondition<T>>();
 				DBMsgObject.ContentCondition<T> condition = new DBMsgObject.ContentCondition<T>();
-				condition.model = t;
-				condition.contentValues = contentValues;
-				contentConditionList.add(condition);
+				condition.model = t;//对应的 model
+				condition.contentValues = contentValues;//要插入的值（键值对的形式，key 就是列名）
+				contentConditionList.add(condition);//这里是单个 model 所有只需要 add 一次
 				msgObj.contentConditionList = contentConditionList;
-				msgObj.listener = listener;
+				msgObj.listener = listener;//对应的监听
 				Message msg = new Message();
-				msg.what = DatabaseOptionType.OPTION_INSERT.VALUE;
+				msg.what = DatabaseOptionType.OPTION_INSERT.VALUE;//消息类型
 				msg.obj = msgObj;
-				handler.sendMessage(msg);
+				handler.sendMessage(msg);//在 handler 中处理
 			}
 		}
 	}
@@ -170,40 +168,37 @@ public class DatabaseManager {
 		insert(claz, t, null);
 	}
 
-	public <T extends BaseModel> void insert(Class<T> claz, List<T> models,
-			DBOperateAsyncListener listener) {
-		if (claz != null && models != null && models.size() > 0) {
-			DBMsgObject<T> msgObj = new DBMsgObject<T>();
-			msgObj.claz = claz;
-			List<DBMsgObject.ContentCondition<T>> list = new ArrayList<DBMsgObject.ContentCondition<T>>();
-			for (T model : models) {
-				ContentValues contentValues = null;
-				try {
-					contentValues = model.getContentValues();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (contentValues != null) {
-					DBMsgObject.ContentCondition<T> condition = new DBMsgObject.ContentCondition<T>();
-					condition.contentValues = contentValues;
-					condition.model = model;
-					list.add(condition);
-				}
-			}
-			if (list.size() > 0) {
-				msgObj.contentConditionList = list;
-				msgObj.listener = listener;
-				Message msg = new Message();
-				msg.what = DatabaseOptionType.OPTION_INSERT.VALUE;
-				msg.obj = msgObj;
-				handler.sendMessage(msg);
-			}
-		}
-	}
+    public <T extends BaseModel> void insert(Class<T> claz, List<T> models, DBOperateAsyncListener listener) {
+        if (claz != null && models != null && models.size() > 0) {
+            DBMsgObject<T> msgObj = new DBMsgObject<T>();
+            msgObj.claz = claz;
+            List<DBMsgObject.ContentCondition<T>> list = new ArrayList<DBMsgObject.ContentCondition<T>>();
+            for (T model : models) {
+                ContentValues contentValues = null;
+                try {
+                    contentValues = model.getContentValues();
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                if (contentValues != null) {
+                    DBMsgObject.ContentCondition<T> condition = new DBMsgObject.ContentCondition<T>();
+                    condition.contentValues = contentValues;
+                    condition.model = model;
+                    list.add(condition);
+                }
+            }
+            if (list.size() > 0) {
+                msgObj.contentConditionList = list;
+                msgObj.listener = listener;
+                Message msg = new Message();
+                msg.what = DatabaseOptionType.OPTION_INSERT.VALUE;
+                msg.obj = msgObj;
+                handler.sendMessage(msg);
+            }
+        }
+    }
 	public   <T extends BaseModel> long syncInsert( Class<T> claz, T  value) {
 	    return syncInsert(claz,value,true);
 	}
@@ -220,14 +215,10 @@ public class DatabaseManager {
 				try {
 					contentValues = value.getContentValues();
 				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-
 //				if (false == isWithinTransaction()) {
 					SQLiteDatabase database = appAppDatabase
 							.getWritableDatabase();
@@ -288,8 +279,7 @@ public class DatabaseManager {
 					condition.contentValues = contentValues;
 					condition.model = t;
 					condition.whereClause = unique + " = ?";
-					condition.whereArgs = new String[] { contentValues
-							.getAsString(unique) };
+					condition.whereArgs = new String[] { contentValues.getAsString(unique) };
 					contentConditionList.add(condition);
 					msgObj.contentConditionList = contentConditionList;
 					msgObj.listener = listener;
@@ -436,10 +426,10 @@ public class DatabaseManager {
 			DBMsgObject.ContentCondition<T> condition = new DBMsgObject.ContentCondition<T>();
 			contentConditionList.add(condition);
 			if (!TextUtils.isEmpty(whereClause)) {
-				condition.whereClause = whereClause;
+				condition.whereClause = whereClause;//删除的条件
 			}
 			if (whereArgs != null && whereArgs.length > 0) {
-				condition.whereArgs = whereArgs;
+				condition.whereArgs = whereArgs;//对应 whereClause 中的占位符
 			}
 			msgObj.contentConditionList = contentConditionList;
 			msgObj.deleteListener = listener;
@@ -458,21 +448,19 @@ public class DatabaseManager {
 	private <T extends BaseModel> String getUniqueColumn(Class<T> claz) {
 		String unique = uniqueMap.get(claz);
 		if (TextUtils.isEmpty(unique)) {
-			HashMap<DatabaseField, String> map = DatabaseTools
-					.getDatabaseFields(claz);
+			HashMap<DatabaseField, String> map = DatabaseTools.getDatabaseFields(claz);//调用这个方法获得类的映射结构
 			if (map != null && map.size() > 0) {
-				Iterator<Entry<DatabaseField, String>> iterator = map
-						.entrySet().iterator();
+				Iterator<Entry<DatabaseField, String>> iterator = map.entrySet().iterator();
 				String tempUnique = "";
 				if (iterator != null) {
-					while (iterator.hasNext()) {
+					while (iterator.hasNext()) {//遍历
 						Entry<DatabaseField, String> entry = iterator.next();
 						DatabaseField field = entry.getKey();
 						if (field != null) {
 							if (TextUtils.isEmpty(tempUnique)) {
 								tempUnique = field.columnName();
 							}
-							if (field.unique()) {
+							if (field.unique()) {//判断是是否是为 true 表示唯一
 								unique = field.columnName();
 								uniqueMap.put(claz, unique);
 								break;
